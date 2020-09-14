@@ -1,0 +1,14 @@
+# https://practice.geeksforgeeks.org/problems/print-adjacency-list/0
+def makeAdjList():
+    v, e = input().rsplit()
+    
+    # some constructor for a linked list here
+    # initialize empty array of size v, of type node pointer
+    
+    for egde in e:
+        
+    
+test_case = input()
+print(test_case)
+for i in test_case:
+    makeAdjList()

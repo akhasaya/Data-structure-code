@@ -1,0 +1,268 @@
+# https://www.hackerrank.com/challenges/torque-and-development/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=graphs
+# approach - make adj matrix and then generate adj list from it
+# solves 7 test cases
+
+# find the number of trees in a forest
+
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+from array import *
+
+def bfs(first, n, adj_list):
+    track_graph = []
+    track_graph.append(first)
+    index = 0
+    while index < len(track_graph):
+        element = track_graph[index]
+        for i in adj_list[element-1]:
+            if i not in track_graph:
+                track_graph.append(i)
+        index+=1
+    return track_graph
+
+# Complete the roadsAndLibraries function below.
+def roadsAndLibraries(n, c_lib, c_road, cities):
+    if c_lib<=c_road:
+        return n*c_lib
+    
+    # try adjacency list - lookup time complexity is less
+    graph = []
+
+    for i in range(n+1):
+        small_array = []
+        for j in range(n+1):
+            small_array.append(0)
+        graph.append(small_array)
+   
+    for c in cities:
+        graph[c[0]][c[1]] = 1
+        graph[c[1]][c[0]] = 1
+
+    adj_list = []
+    for i in range(1, n+1):
+        list_n = []
+        for j in range(1, n+1):
+            if graph[i][j] == 1:
+                list_n.append(j)
+        print("list n ", list_n)
+        adj_list.append(list_n)
+    print("The adj list is  : ", adj_list)
+
+    groups = 0
+    remaining_nodes = range(1,n+1)
+    while len(remaining_nodes) > 0:
+        covered_nodes = bfs(remaining_nodes[0], n, adj_list)
+        print(covered_nodes)
+        remaining_nodes = list(set(remaining_nodes) - set(covered_nodes))
+        groups +=1
+    
+    print()
+    initial = c_lib + (n-1) * c_road
+    initial += (groups - 1) * (c_lib - c_road)
+    return initial
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    q = int(input())
+
+    for q_itr in range(q):
+        nmC_libC_road = input().split()
+
+        n = int(nmC_libC_road[0])
+
+        m = int(nmC_libC_road[1])
+
+        c_lib = int(nmC_libC_road[2])
+
+        c_road = int(nmC_libC_road[3])
+
+        cities = []
+
+        for _ in range(m):
+            cities.append(list(map(int, input().rstrip().split())))
+
+        result = roadsAndLibraries(n, c_lib, c_road, cities)
+
+        fptr.write(str(result) + '\n')
+
+    fptr.close()
+
+
+
+
+
+
+# Approach 2 - directly I made a adj list with matrix of matrices 
+# 6 cases ran into time limit exceedederror
+
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+from array import *
+
+def bfs(first, n, adj_list):
+    track_graph = []
+    track_graph.append(first)
+    index = 0
+    while index < len(track_graph):
+        element = track_graph[index]
+        index+=1
+        if not isinstance(adj_list[element], list):
+            continue
+        for i in adj_list[element]:
+            if i not in track_graph:
+                track_graph.append(i)
+    return track_graph
+
+# Complete the roadsAndLibraries function below.
+def roadsAndLibraries(n, c_lib, c_road, cities):
+    if c_lib<=c_road:
+        return n*c_lib
+    
+    # try adjacency list - lookup time complexity is less
+    
+    adj_list = [0] * (n+1)
+    for c in cities:
+        if isinstance(adj_list[c[0]], list):
+            adj_list[c[0]].append(c[1])
+        else:
+            adj_list[c[0]] = [c[1]]
+        if isinstance(adj_list[c[1]], list):
+            adj_list[c[1]].append(c[0])
+        else:
+            adj_list[c[1]] = [c[0]]
+
+    groups = 0
+    remaining_nodes = range(1,n+1)
+    while len(remaining_nodes) > 0:
+        covered_nodes = bfs(remaining_nodes[0], n, adj_list)
+        remaining_nodes = list(set(remaining_nodes) - set(covered_nodes))
+        groups +=1
+    
+    print()
+    initial = c_lib + (n-1) * c_road
+    initial += (groups - 1) * (c_lib - c_road)
+    return initial
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    q = int(input())
+
+    for q_itr in range(q):
+        nmC_libC_road = input().split()
+
+        n = int(nmC_libC_road[0])
+
+        m = int(nmC_libC_road[1])
+
+        c_lib = int(nmC_libC_road[2])
+
+        c_road = int(nmC_libC_road[3])
+
+        cities = []
+
+        for _ in range(m):
+            cities.append(list(map(int, input().rstrip().split())))
+
+        result = roadsAndLibraries(n, c_lib, c_road, cities)
+
+        fptr.write(str(result) + '\n')
+
+    fptr.close()
+
+
+# Approach 3
+
+Created a adjacency list, then i found trees from them, then counted the number of trees, to find the desired answer.
+This solved 7 test cases. I am giving up now
+
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+from array import *
+
+def bfs(first, n, adj_list):
+    track_graph = []
+    track_graph.append(first)
+    index = 0
+    while index < len(track_graph):
+        element = track_graph[index]
+        index+=1
+        if not isinstance(adj_list[element], list):
+            continue
+        for i in adj_list[element]:
+            if i not in track_graph:
+                track_graph.append(i)
+    return track_graph
+
+# Complete the roadsAndLibraries function below.
+def roadsAndLibraries(n, c_lib, c_road, cities):
+    if c_lib<=c_road:
+        return n*c_lib
+    
+    # try adjacency list - lookup time complexity is less
+    
+    adj_list = [0] * (n+1)
+    for c in cities:
+        if isinstance(adj_list[c[0]], list):
+            adj_list[c[0]].append(c[1])
+        else:
+            adj_list[c[0]] = [c[1]]
+        if isinstance(adj_list[c[1]], list):
+            adj_list[c[1]].append(c[0])
+        else:
+            adj_list[c[1]] = [c[0]]
+
+    groups = 0
+    remaining_nodes = range(1,n+1)
+    while len(remaining_nodes) > 0:
+        covered_nodes = bfs(remaining_nodes[0], n, adj_list)
+        remaining_nodes = list(set(remaining_nodes) - set(covered_nodes))
+        groups +=1
+    
+    print()
+    initial = c_lib + (n-1) * c_road
+    initial += (groups - 1) * (c_lib - c_road)
+    return initial
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    q = int(input())
+
+    for q_itr in range(q):
+        nmC_libC_road = input().split()
+
+        n = int(nmC_libC_road[0])
+
+        m = int(nmC_libC_road[1])
+
+        c_lib = int(nmC_libC_road[2])
+
+        c_road = int(nmC_libC_road[3])
+
+        cities = []
+
+        for _ in range(m):
+            cities.append(list(map(int, input().rstrip().split())))
+
+        result = roadsAndLibraries(n, c_lib, c_road, cities)
+
+        fptr.write(str(result) + '\n')
+
+    fptr.close()

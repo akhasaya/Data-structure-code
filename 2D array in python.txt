@@ -1,0 +1,8 @@
+for i in range(n+1):
+        small_array = []
+        for j in range(n+1):
+            small_array.append(0)
+        graph.append(small_array)
+
+# it's important to have the small_array declaration inside first loop
+# else same array reference will be placed in all places of the graph

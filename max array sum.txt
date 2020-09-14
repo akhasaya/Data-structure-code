@@ -1,0 +1,42 @@
+# Given an array, find max sum in subarray formed by non-adjuscent elements
+# https://www.hackerrank.com/challenges/max-array-sum/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=dynamic-programming
+
+
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the maxSubsetSum function below.
+def maxSubsetSum(arr):
+    if n == 1:
+        return arr[0]
+    brr = []
+
+    for index, element in enumerate(arr):
+        if index < 2:
+            brr.append(element)
+        elif index==2:
+            brr.append(max(element,element+brr[0],brr[0]))
+        else:
+            m = max(element,element+brr[index-2],brr[index-2])
+            m = max(m, element+brr[index-3],brr[index-3])
+            brr.append(m)
+    
+    return max(brr[n-1],brr[n-2])
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    n = int(input())
+
+    arr = list(map(int, input().rstrip().split()))
+
+    res = maxSubsetSum(arr)
+
+    fptr.write(str(res) + '\n')
+
+    fptr.close()

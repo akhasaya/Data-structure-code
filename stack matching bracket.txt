@@ -1,0 +1,60 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the isBalanced function below.
+def isBalanced(s):
+    stack = []
+    sl = 0
+
+    length = len(s)
+    if length % 2 != 0:
+        return "NO"
+
+    for char in s:
+        if char == '{' or char == '[' or char == '(':
+            stack.append(char)
+            sl +=1
+        elif char == '}':
+            if sl > 0 and stack[sl -1] == '{':
+                stack.pop()
+                sl -= 1
+            else:
+                return "NO"
+        elif char == ']':
+            if sl > 0 and stack[sl -1] == '[':
+                stack.pop()
+                sl -= 1
+            else:
+                return "NO"
+        elif char == ')':
+            if sl > 0 and stack[sl -1] == '(':
+                stack.pop()
+                sl -= 1
+            else:
+                return "NO"
+        else:
+            return "NO"
+    if sl == 0:
+        return "YES"
+    else:
+        return "NO"
+    
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    t = int(input())
+
+    for t_itr in range(t):
+        s = input()
+
+        result = isBalanced(s)
+
+        fptr.write(result + '\n')
+
+    fptr.close()
